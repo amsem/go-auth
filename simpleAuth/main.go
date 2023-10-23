@@ -7,14 +7,14 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
+	"gopkg.in/boj/redistore.v1"
 )
 
 
 
 var secret_key = securecookie.GenerateRandomKey(8)
 
-var store = sessions.NewCookieStore(secret_key)
+var store, err = redistore.NewRediStore(10, "tcp", ":6379", "", []byte(secret_key))
 
 var users = map[string]string{"amsem": "pass", "admin": "admin"}
 
@@ -44,7 +44,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request)  {
 
 func LogOutHandler(w http.ResponseWriter, r *http.Request)  {
     session, _ := store.Get(r, "session.id")
-    session.Values["authenticated"] = false
+    session.Options.MaxAge = -1
     session.Save(r, w)
     w.Write([]byte("logged out"))
 }
