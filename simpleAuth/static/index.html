@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Authentication</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.js"></script>
+</head>
+<body>
+    <h1>Simple Authentication</h1>
+
+    <div id="login-form">
+        <h2>Login</h2>
+        <form hx-post="/login" hx-trigger="submit">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="logout" hx-get="/logout" hx-trigger="click">
+        <button>Logout</button>
+    </div>
+
+    <div id="health-check" hx-get="/health" hx-trigger="click">
+        <button>Check Health</button>
+        <div id="health-status"></div>
+    </div>
+
+    <script>
+        function updateHealthStatus(responseText) {
+            document.getElementById("health-status").innerText = responseText;
+        }
+        htmx.on("htmx:afterSwap", function(evt) {
+            if (evt.target.id === "health-status") {
+                updateHealthStatus(evt.detail.xhr.responseText);
+            }
+        });
+    </script>
+</body>
+</html>
+

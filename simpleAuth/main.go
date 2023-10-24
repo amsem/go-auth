@@ -6,15 +6,15 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/securecookie"
+//	"github.com/gorilla/securecookie"
 	"gopkg.in/boj/redistore.v1"
 )
 
 
 
-var secret_key = securecookie.GenerateRandomKey(8)
+//var secret_key = securecookie.GenerateRandomKey(8)
 
-var store, err = redistore.NewRediStore(10, "tcp", ":6379", "", []byte(secret_key))
+var store, err = redistore.NewRediStore(10, "tcp", ":6379", "", []byte("hello"))
 
 var users = map[string]string{"amsem": "pass", "admin": "admin"}
 
@@ -60,6 +60,8 @@ func HealthCheckHandler(w http.ResponseWriter, r *http.Request)  {
 
 func main()  {
     r := mux.NewRouter()
+//    fs := http.FileServer(http.Dir("./static/"))
+//    r.PathPrefix("/static").Handler(http.StripPrefix("/static/", fs))
     r.HandleFunc("/login", LoginHandler)
     r.HandleFunc("/logout", LogOutHandler)
     r.HandleFunc("/health", HealthCheckHandler)
